@@ -20,7 +20,7 @@ class SubscriptionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function subscribeToTopic(Request $request, $topic)
     {
@@ -30,7 +30,11 @@ class SubscriptionController extends Controller
 
         $sub = $this->ss->createSubscription($request->url, $topic);
 
-        if($sub["success"]) return new CreateSubscriptionResource($sub["data"]);
+
+
+        if($sub["success"])
+            return response()->json(new CreateSubscriptionResource($sub["data"]));
+
 
         return response()->json($sub, 400);
     }
