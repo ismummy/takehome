@@ -13,10 +13,10 @@ class SubscriptionService
 
     /**
      *  Creates a new subscription
-     * 
+     *
      * @param string $url
      * @param string $topic
-     * 
+     *
      * @return array $response
      */
     public function createSubscription(string $url, string $topic)
@@ -32,16 +32,16 @@ class SubscriptionService
 
         } catch (\Throwable $th) {
             Log::error("unable to create subscription", ["error" => $th->getMessage()]);
-            
+
             return ["error" => "unable to create subscription", "data" =>  $th->getMessage(), "success" => false];
         }
     }
 
     /**
      * Find all subscription with the passed topic
-     * 
+     *
      * @param string $topic
-     * 
+     *
      * @return collection
      */
     public function getByTopic($topic)
@@ -54,17 +54,21 @@ class SubscriptionService
 
     /**
      * Notify the pass subscriber the given payload
-     * 
+     *
      * @param \App\Models\Subscription $sub
      * @param object|array $payload
-     * 
-     * 
+     *
+     *
      */
     public function notify($sub, $payload)
     {
         try {
-            $v = Http::post($sub->url, $payload);
-            Log::error("unable to notify subscriber", ["error" => $v]);
+            $data = [
+                "topic" => $sub->topic,
+                "data"=> $payload
+            ];
+            $v = Http::post($sub->url, $data);
+            Log::error("notified subscriber", ["error" => $v]);
         } catch (\Throwable $th) {
             Log::error("unable to notify subscriber", ["error" => $th->getMessage()]);
         }
