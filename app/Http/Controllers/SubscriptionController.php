@@ -16,7 +16,7 @@ class SubscriptionController extends Controller
     {
         $this->ss = $ss;
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +29,7 @@ class SubscriptionController extends Controller
         ]);
 
         $sub = $this->ss->createSubscription($request->url, $topic);
-        
+
         if($sub["success"]) return new CreateSubscriptionResource($sub["data"]);
 
         return response()->json($sub, 400);
@@ -42,9 +42,9 @@ class SubscriptionController extends Controller
         if($subs->count() > 0) {
             event(new NewTopicPublished($subs, $request->all()));
 
-            // return response to user
+            return response()->json(["message" =>"Message published"]);
         }
         // if no $subs then notify the user or perform other action(s)
-        
+
     }
 }
